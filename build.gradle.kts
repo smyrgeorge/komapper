@@ -14,8 +14,14 @@ plugins {
 
 val platformProject = project("komapper-platform")
 val gradlePluginProject = project("gradle-plugin")
+val multiplatformProjects = listOf(
+    project("komapper-core")
+)
 val libraryProjects = subprojects.filter {
-    it.name.startsWith("komapper") && !it.name.endsWith("platform")
+    it.name.startsWith("komapper") &&
+            !it.name.endsWith("platform") &&
+            // We need to exclude core project for now.
+            multiplatformProjects.none { mp -> mp.name == it.name }
 }
 val exampleProjects = subprojects.filter {
     it.name.startsWith("example")
@@ -100,6 +106,10 @@ configure(libraryProjects + gradlePluginProject) {
         withJavadocJar()
         withSourcesJar()
     }
+}
+
+configure(multiplatformProjects) {
+    // TODO: fill this part
 }
 
 configure(kotlinProjects) {
